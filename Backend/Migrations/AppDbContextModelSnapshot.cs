@@ -67,8 +67,11 @@ namespace Backend.Migrations
 
             modelBuilder.Entity("Backend.Models.Vehicle", b =>
                 {
-                    b.Property<string>("VehicleNumber")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("VehicleID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("VehicleID"));
 
                     b.Property<string>("BodyType")
                         .IsRequired()
@@ -107,14 +110,15 @@ namespace Backend.Migrations
                     b.Property<int>("UserID")
                         .HasColumnType("int");
 
-                    b.Property<int>("VehicleID")
-                        .HasColumnType("int");
+                    b.Property<string>("VehicleNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("VehicleType")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("VehicleNumber");
+                    b.HasKey("VehicleID");
 
                     b.HasIndex("UserID");
 

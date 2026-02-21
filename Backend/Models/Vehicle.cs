@@ -1,7 +1,12 @@
-﻿namespace Backend.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+
+namespace Backend.Models
 {
     public class Vehicle
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int VehicleID { get; set; }
         public string VehicleNumber { get; set; }
         public string VehicleType { get; set; }

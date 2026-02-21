@@ -19,6 +19,7 @@ namespace Backend
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IVehicleService, VehicleService>();
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();

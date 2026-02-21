@@ -23,7 +23,7 @@ namespace Backend.Migrations
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     EmailAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Location = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PhotoPath = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    PhotoPath = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -34,7 +34,9 @@ namespace Backend.Migrations
                 name: "Vehicles",
                 columns: table => new
                 {
-                    VehicleNumber = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    VehicleID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    VehicleNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     VehicleType = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ChassisNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     EngineNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -49,7 +51,7 @@ namespace Backend.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Vehicles", x => x.VehicleNumber);
+                    table.PrimaryKey("PK_Vehicles", x => x.VehicleID);
                     table.ForeignKey(
                         name: "FK_Vehicles_Users_UserID",
                         column: x => x.UserID,

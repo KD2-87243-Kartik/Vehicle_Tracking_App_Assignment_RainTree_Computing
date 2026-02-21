@@ -21,7 +21,7 @@ namespace Backend.Data
                 .HasKey(u => u.UserID);
 
             modelBuilder.Entity<Vehicle>()
-                .HasKey(v => v.VehicleNumber);
+                .HasKey(v => v.VehicleID);
 
             modelBuilder.Entity<Vehicle>()
                 .HasOne(v => v.User)

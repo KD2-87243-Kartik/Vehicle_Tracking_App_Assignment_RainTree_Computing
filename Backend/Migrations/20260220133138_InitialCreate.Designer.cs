@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260220064443_InitialCreate")]
+    [Migration("20260220133138_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -61,7 +61,6 @@ namespace Backend.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhotoPath")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserID");
@@ -71,8 +70,11 @@ namespace Backend.Migrations
 
             modelBuilder.Entity("Backend.Models.Vehicle", b =>
                 {
-                    b.Property<string>("VehicleNumber")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("VehicleID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("VehicleID"));
 
                     b.Property<string>("BodyType")
                         .IsRequired()
@@ -111,11 +113,15 @@ namespace Backend.Migrations
                     b.Property<int>("UserID")
                         .HasColumnType("int");
 
+                    b.Property<string>("VehicleNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("VehicleType")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("VehicleNumber");
+                    b.HasKey("VehicleID");
 
                     b.HasIndex("UserID");
 
