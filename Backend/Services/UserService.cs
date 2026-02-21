@@ -1,4 +1,5 @@
 ﻿using Backend.Data;
+using Backend.DTO;
 using Backend.DTOs;
 using Backend.Models;
 using Microsoft.EntityFrameworkCore;
@@ -58,19 +59,50 @@ namespace Backend.Services
             };
         }
 
-        public async Task<IEnumerable<UserResponseDto>> GetAllUsers()
+        public async Task<IEnumerable<UserListDTO>> GetAllUsers()
         {
             return await _context.Users
-                .Select(user => new UserResponseDto
+                .Select(user => new UserListDTO
                 {
                     UserID = user.UserID,
                     Name = user.Name,
                     MobileNumber = user.MobileNumber,
-                    Organization = user.Organization,
-                    EmailAddress = user.EmailAddress,
-                    Location = user.Location
+                    Organization = user.Organization
                 })
                 .ToListAsync();
+        }
+
+        public async Task<UserDetailsDTO> UpdateUser(int id, UserUpdateDTO userDto)
+        {
+            var user = await _context.Users.FindAsync(id);
+
+            if (user == null)
+                return null;
+
+            user.Name = userDto.Name;
+            user.MobileNumber = userDto.MobileNumber;
+            user.Organization = userDto.Organization;
+            user.Address = userDto.Address;
+            user.EmailAddress = userDto.EmailAddress;
+            user.Location = userDto.Location;
+            if (userDto.PhotoPath != null)
+            {
+                user.PhotoPath = userDto.PhotoPath;
+            }
+
+            await _context.SaveChangesAsync();
+
+            return new UserDetailsDTO
+            {
+                UserID = user.UserID,
+                Name = user.Name,
+                MobileNumber = user.MobileNumber,
+                Organization = user.Organization,
+                Address = user.Address,
+                EmailAddress = user.EmailAddress,
+                Location = user.Location,
+                PhotoPath = user.PhotoPath
+            };
         }
     }
 }

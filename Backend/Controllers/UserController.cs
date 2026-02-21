@@ -1,4 +1,5 @@
-﻿using Backend.DTOs;
+﻿using Backend.DTO;
+using Backend.DTOs;
 using Backend.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -38,6 +39,17 @@ namespace Backend.Controllers
         {
             var users = await _userService.GetAllUsers();
             return Ok(users);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, UserUpdateDTO userDto)
+        {
+            var updatedUser = await _userService.UpdateUser(id, userDto);
+
+            if (updatedUser == null)
+                return NotFound("User not found");
+
+            return Ok(updatedUser);
         }
     }
 }

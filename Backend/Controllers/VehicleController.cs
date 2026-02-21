@@ -1,6 +1,8 @@
-﻿using Backend.DTOs;
+﻿using Backend.DTO;
+using Backend.DTOs;
 using Backend.Services;
 using Microsoft.AspNetCore.Mvc;
+
 
 namespace Backend.Controllers
 {
@@ -45,6 +47,26 @@ namespace Backend.Controllers
         {
             var vehicles = await _vehicleService.GetVehiclesByUserId(userId);
             return Ok(vehicles);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateVehicle(int id, VehicleUpdateDTO vehicleDto)
+        {
+            var updatedVehicle = await _vehicleService.UpdateVehicle(id, vehicleDto);
+
+            if (updatedVehicle == null)
+                return NotFound();
+
+            return Ok(updatedVehicle);
+        }
+
+        [HttpGet("search")]
+        public async Task<IActionResult> SearchVehicles(string? searchTerm, int pageNumber = 1, int pageSize = 5)
+        {
+            var result = await _vehicleService
+                .SearchVehicles(searchTerm, pageNumber, pageSize);
+
+            return Ok(result);
         }
     }
 }

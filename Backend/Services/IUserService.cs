@@ -1,4 +1,5 @@
-﻿using Backend.DTOs;
+﻿using Backend.DTO;
+using Backend.DTOs;
 
 namespace Backend.Services
 {
@@ -6,6 +7,7 @@ namespace Backend.Services
     {
         Task<UserResponseDto> RegisterUser(UserCreateDto userDTO);
         Task<UserResponseDto> GetUserById(int id);
-        Task<IEnumerable<UserResponseDto>> GetAllUsers();
+        Task<IEnumerable<UserListDTO>> GetAllUsers();       
+        Task<UserDetailsDTO> UpdateUser(int id, UserUpdateDTO userDto);
     }
 }
