@@ -22,7 +22,12 @@ namespace Backend.Controllers
         [HttpPost]
         public async Task<IActionResult> AddVehicle(VehicleCreateDto vehicleDto)
         {
-            var result = await _vehicleService.AddVehicle(vehicleDto);
+            var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value
+                              ?? User.FindFirst("nameid")?.Value;
+
+            if (userIdClaim == null) return Unauthorized();
+
+            var result = await _vehicleService.AddVehicle(vehicleDto, int.Parse(userIdClaim));
             return Ok(result);
         }
 

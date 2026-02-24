@@ -42,23 +42,28 @@ export class VehicleFormComponent implements OnInit {
     deviceID: ['', Validators.required],
     userID: [{ value: '', disabled: true }, Validators.required]
   });
-    const id = this.route.snapshot.paramMap.get('id');
+  const id = this.route.snapshot.paramMap.get('id');
 
-    if (id) {
-      this.isEditMode = true;
-      this.vehicleId = +id;
-      this.loadVehicle(this.vehicleId);
-    }else {
-      this.setAutoUserId();
-    }
+  if (id) {
+    this.isEditMode = true;
+    this.vehicleId = +id;
+    this.loadVehicle(this.vehicleId);
+  } else {
+    this.isEditMode = false;
+    this.setAutoUserId(); 
   }
+}
 
-  setAutoUserId() {
-    const currentUserId = this.authService.getCurrentUserId(); 
-    if (currentUserId) {
-      this.vehicleForm.patchValue({ userID: currentUserId });
-    }
+  // vehicle-form.component.ts
+setAutoUserId() {
+  const currentUserId = this.authService.getCurrentUserId(); 
+
+  if (currentUserId) {
+    this.vehicleForm.patchValue({ userID: currentUserId });
+  } else {
+    alert("User session expired. Please log in again.");
   }
+}
 
   loadVehicle(id: number) {
     this.vehicleService.getVehicleById(id).subscribe({
@@ -70,20 +75,22 @@ export class VehicleFormComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.vehicleForm.invalid) return;
+  if (this.vehicleForm.invalid) return;
 
-    if (this.isEditMode) {
-      this.vehicleService.updateVehicle(this.vehicleId, this.vehicleForm.value)
-        .subscribe(() => {
-          alert('Vehicle updated successfully');
-          this.router.navigate(['/vehicles']);
-        });
-    } else {
-      this.vehicleService.addVehicle(this.vehicleForm.value)
-        .subscribe(() => {
-          alert('Vehicle added successfully');
-          this.router.navigate(['/vehicles']);
-        });
+  const payload = this.vehicleForm.getRawValue();
+
+  if (this.isEditMode) {
+    this.vehicleService.updateVehicle(this.vehicleId, payload)
+      .subscribe(() => {
+        alert('Vehicle updated successfully');
+        this.router.navigate(['/vehicles']);
+      });
+  } else {
+    this.vehicleService.addVehicle(payload)
+      .subscribe(() => {
+        alert('Vehicle added successfully');
+        this.router.navigate(['/vehicles']);
+      });
     }
   }
 }

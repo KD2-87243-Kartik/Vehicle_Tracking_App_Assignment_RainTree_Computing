@@ -23,21 +23,24 @@ export class AuthService {
     localStorage.removeItem('token');
   }
 
-  getCurrentUserId(): number | null {
-    const token = localStorage.getItem('token');
-    if (!token) return null;
+// auth.service.ts
+getCurrentUserId(): number | null {
+  const token = localStorage.getItem('token');
+  if (!token || token === '[object Object]') return null; //
 
-    try {
-      const decoded: any = jwtDecode(token);
-      
-      const id = decoded.nameid || decoded.sub;
-      
-      return id ? Number(id) : null;
-    } catch (error) {
-      console.error("Error decoding token:", error);
-      return null;
-    }
+  try {
+    const decoded: any = jwtDecode(token);
+    console.log("Full Decoded Token:", decoded); 
+    
+    const id = decoded.nameid || decoded.sub || decoded.id || decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'];
+    
+    return id ? Number(id) : null;
+  } catch (error) {
+    console.error("Error decoding token:", error);
+    return null;
   }
+}
+  
   isLoggedIn(): boolean {
     return !!localStorage.getItem('token');
   }

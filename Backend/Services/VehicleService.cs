@@ -16,10 +16,10 @@ namespace Backend.Services
             _context = context;
         }
 
-        public async Task<VehicleResponseDto> AddVehicle(VehicleCreateDto vehicleDTO)
+        public async Task<VehicleResponseDto> AddVehicle(VehicleCreateDto vehicleDTO, int userId)
         {
             var userExists = await _context.Users
-                .AnyAsync(u => u.UserID == vehicleDTO.UserID);
+            .AnyAsync(u => u.UserID == userId);
 
             if (!userExists) return null!;
 
@@ -36,7 +36,8 @@ namespace Backend.Services
                 BodyType = vehicleDTO.BodyType,
                 OrganisationName = vehicleDTO.OrganisationName,
                 DeviceID = vehicleDTO.DeviceID,
-                UserID = vehicleDTO.UserID
+                //UserID = vehicleDTO.UserID,
+                UserID = userId
             };
 
             _context.Vehicles.Add(vehicle);
@@ -142,7 +143,7 @@ namespace Backend.Services
             };
         }
 
-        private VehicleResponseDto MapToResponseDto(Vehicle v)
+        private static VehicleResponseDto MapToResponseDto(Vehicle v)
         {
             return new VehicleResponseDto
             {
@@ -161,6 +162,6 @@ namespace Backend.Services
                 DeviceID = v.DeviceID
             };
         }
-
+         
     }
 }

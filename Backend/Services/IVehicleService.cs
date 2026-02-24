@@ -6,7 +6,7 @@ namespace Backend.Services
 {
     public interface IVehicleService
     {
-        Task<VehicleResponseDto> AddVehicle(VehicleCreateDto vehicleDTO);
+        Task<VehicleResponseDto> AddVehicle(VehicleCreateDto vehicleDTO, int userId);
 
         Task<IEnumerable<VehicleResponseDto>> GetMyVehicles(int userId);
 
