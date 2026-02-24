@@ -1,0 +1,18 @@
+
+    <div class="form-container">
+      <h2>Create User</h2>
+
+    <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+
+        <input type="text" formControlName="name" placeholder="Name">
+        <input type="email" formControlName="emailAddress" placeholder="Email">
+        <input type="password" formControlName="password" placeholder="Password">
+        <input type="text" formControlName="mobileNumber" placeholder="Mobile Number">
+        <input type="text" formControlName="organization" placeholder="Organization">
+        <input type="text" formControlName="address" placeholder="Address">
+        <input type="text" formControlName="location" placeholder="Location">
+        <input type="text" formControlName="photoPath" placeholder="Photo Path">
+
+    <button type="submit">Save User</button>
+  </form>
+</div>

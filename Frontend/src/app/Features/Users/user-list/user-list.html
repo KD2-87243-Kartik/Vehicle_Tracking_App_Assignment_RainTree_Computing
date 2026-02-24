@@ -1,0 +1,28 @@
+<h2>User List</h2>
+
+<button routerLink="/users/add">Add User</button>
+
+<table border="1" cellpadding="10">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Mobile</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr *ngFor="let user of users">
+      <td>{{ user.name }}</td>
+      <td>{{ user.emailAddress }}</td>
+      <td>{{ user.mobileNumber }}</td>
+      <td>
+        <button [routerLink]="['/users/edit', user.userID]">
+          Edit
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table> 
+

@@ -2,6 +2,8 @@
 using Backend.DTOs;
 using Backend.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Backend.Controllers
 {
@@ -16,6 +18,7 @@ namespace Backend.Controllers
             _userService = userService;
         }
 
+        [AllowAnonymous]
         [HttpPost("register")]
         public async Task<IActionResult> Register(UserCreateDto userDto)
         {
@@ -50,6 +53,18 @@ namespace Backend.Controllers
                 return NotFound("User not found");
 
             return Ok(updatedUser);
+        }
+
+        [AllowAnonymous]
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(UserLoginDto loginDto)
+        {
+            var token = await _userService.Login(loginDto);
+
+            if (token == null)
+                return Unauthorized("Invalid credentials");
+
+            return Ok(new { token });
         }
     }
 }

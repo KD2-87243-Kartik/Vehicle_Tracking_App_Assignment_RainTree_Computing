@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260220133138_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20260224103741_AddUserInteractions")]
+    partial class AddUserInteractions
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

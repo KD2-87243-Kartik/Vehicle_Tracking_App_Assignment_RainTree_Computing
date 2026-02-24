@@ -3,16 +3,24 @@ using Backend.DTO;
 using Backend.DTOs;
 using Backend.Models;
 using Microsoft.EntityFrameworkCore;
+using BCrypt.Net;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace Backend.Services
 {
     public class UserService : IUserService
     {
         private readonly AppDbContext _context;
+        private readonly IConfiguration _configuration;
 
-        public UserService(AppDbContext context)
+        public UserService(AppDbContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
 
         public async Task<UserResponseDto> RegisterUser(UserCreateDto userDto)
@@ -20,7 +28,7 @@ namespace Backend.Services
             var user = new User
             {
                 Name = userDto.Name,
-                Password = userDto.Password,
+                Password = BCrypt.Net.BCrypt.HashPassword(userDto.Password),
                 MobileNumber = userDto.MobileNumber,
                 Organization = userDto.Organization,
                 Address = userDto.Address,
@@ -66,6 +74,7 @@ namespace Backend.Services
                 {
                     UserID = user.UserID,
                     Name = user.Name,
+                    emailAddress = user.EmailAddress,
                     MobileNumber = user.MobileNumber,
                     Organization = user.Organization
                 })
@@ -103,6 +112,43 @@ namespace Backend.Services
                 Location = user.Location,
                 PhotoPath = user.PhotoPath
             };
+        }
+
+        public async Task<string?> Login(UserLoginDto loginDto)
+        {
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => u.EmailAddress == loginDto.EmailAddress);
+
+            if (user == null)
+                return null;
+
+            bool isValidPassword = BCrypt.Net.BCrypt
+                .Verify(loginDto.Password, user.Password);
+
+            if (!isValidPassword)
+                return null;
+
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.Email, user.EmailAddress),
+                new Claim(ClaimTypes.NameIdentifier, user.UserID.ToString())
+            };
+
+            var key = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                issuer: _configuration["Jwt:Issuer"],
+                audience: _configuration["Jwt:Audience"],
+                claims: claims,
+                expires: DateTime.Now.AddMinutes(
+                    Convert.ToDouble(_configuration["Jwt:DurationInMinutes"])),
+                signingCredentials: creds
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }

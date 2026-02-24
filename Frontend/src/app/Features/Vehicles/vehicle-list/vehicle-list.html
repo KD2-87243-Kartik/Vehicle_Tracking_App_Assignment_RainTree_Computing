@@ -1,0 +1,48 @@
+<div class="vehicles-container">
+  <h2>Vehicles</h2>
+
+  <div class="action-bar">
+    <div class="search-box">
+      <input type="text" [(ngModel)]="searchTerm" placeholder="Search vehicles..." />
+      <button class="btn-search" (click)="search()">Search</button>
+    </div>
+    <button class="btn-add" routerLink="/vehicles/add">Add Vehicle</button>
+  </div>
+
+  <div class="table-responsive">
+    <table class="vesper-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Vehicle Number</th>
+          <th>Type</th>
+          <th>Model</th>
+          <th>Year</th>
+          <th>User</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let vehicle of vehicles">
+          <td>{{ vehicle.vehicleID }}</td>
+          <td><strong>{{ vehicle.vehicleNumber }}</strong></td>
+          <td>{{ vehicle.vehicleType }}</td>
+          <td>{{ vehicle.modelNumber }}</td>
+          <td>{{ vehicle.manufacturingYear }}</td>
+          <td>{{ vehicle.userID }}</td>
+          <td>
+            <button class="btn-edit" [routerLink]="['/vehicles/edit', vehicle.vehicleID]">
+              Edit
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pagination">
+    <button (click)="previousPage()" [disabled]="pageNumber === 1">Previous</button>
+    <span class="page-info">Page <strong>{{ pageNumber }}</strong> of {{ totalPages }}</span>
+    <button (click)="nextPage()" [disabled]="pageNumber === totalPages">Next</button>
+  </div>
+</div>

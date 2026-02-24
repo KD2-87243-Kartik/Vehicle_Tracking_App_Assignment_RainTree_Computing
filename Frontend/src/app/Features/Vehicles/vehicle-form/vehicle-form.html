@@ -1,0 +1,77 @@
+<div class="form-container">
+  <div class="form-card">
+    <h2>{{ isEditMode ? 'Edit Vehicle' : 'Add Vehicle' }}</h2>
+
+    <form [formGroup]="vehicleForm" (ngSubmit)="onSubmit()">
+      <div class="grid-container">
+        
+        <div class="form-group">
+          <label>Vehicle Number</label>
+          <input type="text" formControlName="vehicleNumber" placeholder="MH-12-AB-1234" />
+        </div>
+
+        <div class="form-group">
+          <label>Vehicle Type</label>
+          <input type="text" formControlName="vehicleType" placeholder="Truck / Sedan" />
+        </div>
+
+        <div class="form-group">
+          <label>Manufacturing Year</label>
+          <input type="number" formControlName="manufacturingYear" placeholder="e.g 2024" />
+        </div>
+
+        <div class="form-group">
+          <label>Model Number</label>
+          <input type="text" formControlName="modelNumber" placeholder="e.g., LPT 1613 or Civic" />
+        </div>
+
+        <div class="form-group">
+          <label>Chassis Number</label>
+          <input type="text" formControlName="chassisNumber" placeholder="17-digit VIN number"/>
+        </div>
+
+        <div class="form-group">
+          <label>Engine Number</label>
+          <input type="text" formControlName="engineNumber" placeholder="ABC123456Z"/>
+        </div>
+
+        <div class="form-group">
+          <label>Load Capacity (kg)</label>
+          <input type="number" formControlName="loadCarryingCapacity" placeholder="Weight in kg (e.g., 5000)"/>
+        </div>
+
+        <div class="form-group">
+          <label>Make</label>
+          <input type="text" formControlName="makeOfVehicle" placeholder="e.g., Tata, Ashok Leyland"/>
+        </div>
+
+        <div class="form-group">
+          <label>Body Type</label>
+          <input type="text" formControlName="bodyType" placeholder="e.g., Flatbed, Tanker, Hatchback"/>
+        </div>
+
+        <div class="form-group">
+          <label>Organisation</label>
+          <input type="text" formControlName="organisationName" placeholder="Company or Fleet Name"/>
+        </div>
+
+        <div class="form-group">
+          <label>Device ID</label>
+          <input type="text" formControlName="deviceID" placeholder="e.g., GPS-9988-X"/>
+        </div>
+
+        <div class="form-group">
+          <label>User ID</label>
+          <input type="number" formControlName="userID" />
+        </div>
+
+      </div>
+
+      <button type="submit" class="submit-btn">
+        {{ isEditMode ? 'Update Vehicle' : 'Add Vehicle' }}
+      </button>
+      
+      <button type="button" class="cancel-btn" routerLink="/vehicles">Cancel</button>
+    </form>
+  </div>
+</div>

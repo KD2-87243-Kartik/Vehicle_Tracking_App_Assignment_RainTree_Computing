@@ -1,0 +1,89 @@
+/* Layout Centering */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh; /* Centers the card vertically */
+  padding: 20px;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 400px;
+  padding: 40px;
+  background: white;
+  border: 2px solid #000;
+  border-radius: 30px;
+  /* Optional subtle shadow for depth */
+  box-shadow: 10px 10px 0px rgba(0,0,0,0.05);
+}
+
+h2 {
+  font-size: 2rem;
+  font-weight: 900;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+/* Form Styling */
+.form-group {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  font-weight: 700;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+}
+
+input {
+  padding: 12px 15px;
+  border: 2px solid #000;
+  border-radius: 12px;
+  font-size: 1rem;
+  outline: none;
+  transition: box-shadow 0.2s;
+}
+
+input:focus {
+  box-shadow: 4px 4px 0px #C1BEF7; /* Purple glow from your hero buttons */
+}
+
+/* Login Button */
+.login-submit {
+  width: 100%;
+  padding: 15px;
+  margin-top: 10px;
+  background-color: #dc96f5; 
+  border: 2px solid #000;
+  border-radius: 50px;
+  font-weight: 900;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.login-submit:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 4px 4px 0px #000;
+}
+
+.login-submit:active {
+  transform: translate(0, 0);
+  box-shadow: none;
+}
+
+/* Footer Link */
+.signup-link {
+  margin-top: 25px;
+  text-align: center;
+  font-size: 0.95rem;
+}
+
+.signup-link a {
+  color: #000;
+  font-weight: 800;
+  text-decoration: underline;
+}

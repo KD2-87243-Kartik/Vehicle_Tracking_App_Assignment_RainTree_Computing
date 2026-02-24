@@ -1,11 +1,13 @@
 ﻿using Backend.DTO;
 using Backend.DTOs;
 using Backend.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 
 namespace Backend.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class VehiclesController : ControllerBase
@@ -24,12 +26,12 @@ namespace Backend.Controllers
             return Ok(result);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAll()
-        {
-            var vehicles = await _vehicleService.GetAllVehicles();
-            return Ok(vehicles);
-        }
+        //[HttpGet]
+        //public async Task<IActionResult> GetAll()
+        //{
+        //    var vehicles = await _vehicleService.GetAllVehicles();
+        //    return Ok(vehicles);
+        //}
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
@@ -43,16 +45,18 @@ namespace Backend.Controllers
         }
 
         [HttpGet("user/{userId}")]
-        public async Task<IActionResult> GetByUser(int userId)
+        public async Task<IActionResult> GetMyUser(int userId)
         {
-            var vehicles = await _vehicleService.GetVehiclesByUserId(userId);
+            var vehicles = await _vehicleService.GetMyVehicles(userId);
             return Ok(vehicles);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateVehicle(int id, VehicleUpdateDTO vehicleDto)
         {
-            var updatedVehicle = await _vehicleService.UpdateVehicle(id, vehicleDto);
+            var userId = int.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value);
+
+            var updatedVehicle = await _vehicleService.UpdateVehicle(id, vehicleDto, userId);
 
             if (updatedVehicle == null)
                 return NotFound();
@@ -60,12 +64,24 @@ namespace Backend.Controllers
             return Ok(updatedVehicle);
         }
 
+        [HttpGet("my-fleet")]
+        public async Task<IActionResult> GetMyFleet()
+        {
+            var userId = int.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value);
+
+            var vehicles = await _vehicleService.GetMyVehicles(userId);
+            return Ok(vehicles);
+        }
+
         [HttpGet("search")]
         public async Task<IActionResult> SearchVehicles(string? searchTerm, int pageNumber = 1, int pageSize = 5)
         {
-            var result = await _vehicleService
-                .SearchVehicles(searchTerm, pageNumber, pageSize);
+            var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+            if (userIdClaim == null) return Unauthorized();
 
+            int userId = int.Parse(userIdClaim.Value);
+            Console.WriteLine($"---> API is searching for UserID: {userId}");
+            var result = await _vehicleService.SearchVehicles(userId, searchTerm, pageNumber, pageSize);
             return Ok(result);
         }
     }

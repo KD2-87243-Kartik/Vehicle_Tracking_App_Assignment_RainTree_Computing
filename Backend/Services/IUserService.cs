@@ -9,5 +9,6 @@ namespace Backend.Services
         Task<UserResponseDto> GetUserById(int id);
         Task<IEnumerable<UserListDTO>> GetAllUsers();       
         Task<UserDetailsDTO> UpdateUser(int id, UserUpdateDTO userDto);
+        Task<string?> Login(UserLoginDto loginDto);
     }
 }

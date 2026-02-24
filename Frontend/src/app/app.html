@@ -1,0 +1,18 @@
+<div class="navbar">
+  <nav>
+    <h2>Veloce</h2>
+    <div class="navbarlinks">
+      <a routerLink="/home">Home</a>
+      <a routerLink="/vehicles">Vehicles</a>
+    </div>
+    
+    <span class="buttonlinks">
+      <button *ngIf="authService.isLoggedIn()" (click)="logout()">Logout</button>
+      <a *ngIf="!isLoggedIn()" routerLink="/login">Login</a>
+    </span>
+  </nav>
+</div>
+
+<hr>
+
+<router-outlet></router-outlet>

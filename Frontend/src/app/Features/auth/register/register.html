@@ -1,0 +1,64 @@
+<!-- 
+    <div class="form-container">
+      <h2>Create Account</h2>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+
+        <input type="text" formControlName="name" placeholder="Name">
+        <input type="email" formControlName="emailAddress" placeholder="Email">
+        <input type="password" formControlName="password" placeholder="Password">
+        <input type="text" formControlName="mobileNumber" placeholder="Mobile Number">
+        <input type="text" formControlName="organization" placeholder="Organization">
+        <input type="text" formControlName="address" placeholder="Address">
+        <input type="text" formControlName="location" placeholder="Location">
+        <input type="text" formControlName="photoPath" placeholder="Photo Path">
+
+    <button type="submit">Register</button>
+  </form>
+  <p>
+  Already have an account?
+  <a routerLink="/login">Login</a>
+</p>
+</div> -->
+
+<div class="register-container">
+  <div class="form-card">
+    <h2>Create Account</h2>
+
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+  <div class="grid-container">
+    <input type="text" formControlName="name" placeholder="Name">
+    <input type="email" formControlName="emailAddress" placeholder="Email">
+    
+    <input type="password" formControlName="password" placeholder="Password">
+    <input type="text" formControlName="mobileNumber" placeholder="Mobile Number">
+    
+    <input type="text" formControlName="organization" placeholder="Organization">
+    <input type="text" formControlName="address" placeholder="Address">
+
+    <input type="text" formControlName="location" placeholder="Location">
+
+    <div class="upload-field-item">
+      <div class="image-preview" *ngIf="imagePreviewUrl">
+        <img [src]="imagePreviewUrl" alt="Profile Preview">
+        <button type="button" class="remove-btn" (click)="removeImage()">✕</button>
+      </div>
+
+      <label for="file-upload" class="custom-file-upload" *ngIf="!imagePreviewUrl">
+        <span class="upload-text">UPLOAD PHOTO</span>
+        <small>Click to select a file</small>
+      </label>
+      
+      <input id="file-upload" type="file" (change)="onFileSelected($event)" accept="image/*" />
+    </div>
+  </div>
+
+  <button type="submit" class="register-btn">Register</button>
+</form>
+
+    <p class="footer-text">
+      Already have an account?
+      <a routerLink="/login">Login</a>
+    </p>
+  </div>
+</div>

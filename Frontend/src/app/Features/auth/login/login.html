@@ -1,0 +1,43 @@
+<!-- <h2>Login</h2>
+
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+
+  <label>Email</label>
+  <input type="email" formControlName="emailAddress" />
+
+  <label>Password</label>
+  <input type="password" formControlName="password" />
+
+  <button type="submit">Login</button>
+
+</form>
+
+<p>
+  Don't have an account?
+  <a routerLink="/register">Sign up</a>
+</p> -->
+
+<div class="login-container">
+  <div class="login-card">
+    <h2>Login</h2>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" formControlName="emailAddress" placeholder="email@example.com" />
+      </div>
+
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" formControlName="password" placeholder="••••••••" />
+      </div>
+
+      <button type="submit" class="login-submit">Login</button>
+    </form>
+
+    <p class="signup-link">
+      Don't have an account?
+      <a routerLink="/register">Sign up</a>
+    </p>
+  </div>
+</div>

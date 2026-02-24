@@ -21,8 +21,7 @@ namespace Backend.Services
             var userExists = await _context.Users
                 .AnyAsync(u => u.UserID == vehicleDTO.UserID);
 
-            if (!userExists)
-                return null;
+            if (!userExists) return null!;
 
             var vehicle = new Vehicle
             {
@@ -43,83 +42,54 @@ namespace Backend.Services
             _context.Vehicles.Add(vehicle);
             await _context.SaveChangesAsync();
 
-            return new VehicleResponseDto
-            {
-                VehicleID = vehicle.VehicleID,
-                UserID = vehicle.UserID,
-                VehicleNumber = vehicle.VehicleNumber,
-                VehicleType = vehicle.VehicleType,
-                ManufacturingYear = vehicle.ManufacturingYear,
-                ModelNumber = vehicle.ModelNumber
-            };
+            return MapToResponseDto(vehicle);
         }
 
-        public async Task<IEnumerable<VehicleResponseDto>> GetAllVehicles()
-        {
-            return await _context.Vehicles
-                .Select(vehicle => new VehicleResponseDto
-                {
-                    VehicleID = vehicle.VehicleID,
-                    UserID = vehicle.UserID,
-                    VehicleNumber = vehicle.VehicleNumber,
-                    VehicleType = vehicle.VehicleType,
-                    ManufacturingYear = vehicle.ManufacturingYear,
-                    ModelNumber = vehicle.ModelNumber
-                })
-                .ToListAsync();
-        }
+        //public async Task<IEnumerable<VehicleResponseDto>> GetAllVehicles()
+        //{
+        //    return await _context.Vehicles
+        //        .Select(vehicle => new VehicleResponseDto
+        //        {
+        //            VehicleID = vehicle.VehicleID,
+        //            UserID = vehicle.UserID,
+        //            VehicleNumber = vehicle.VehicleNumber,
+        //            VehicleType = vehicle.VehicleType,
+        //            ManufacturingYear = vehicle.ManufacturingYear,
+        //            ModelNumber = vehicle.ModelNumber
+        //        })
+        //        .ToListAsync();
+        //}
 
         public async Task<VehicleResponseDto> GetVehicleById(int id)
         {
             var vehicle = await _context.Vehicles.FindAsync(id);
-
-            if (vehicle == null) return null;
-
-            return new VehicleResponseDto
-            {
-                VehicleID = vehicle.VehicleID,
-                UserID = vehicle.UserID,
-                VehicleNumber = vehicle.VehicleNumber,
-                VehicleType = vehicle.VehicleType,
-                ManufacturingYear = vehicle.ManufacturingYear,
-                ModelNumber = vehicle.ModelNumber
-            };
+            return vehicle == null ? null! : MapToResponseDto(vehicle);
         }
 
-        public async Task<IEnumerable<VehicleResponseDto>> GetVehiclesByUserId(int userId)
+        public async Task<IEnumerable<VehicleResponseDto>> GetMyVehicles(int userId)
         {
             return await _context.Vehicles
                 .Where(v => v.UserID == userId)
-                .Select(vehicle => new VehicleResponseDto
-                {
-                    VehicleID = vehicle.VehicleID,
-                    UserID = vehicle.UserID,
-                    VehicleNumber = vehicle.VehicleNumber,
-                    VehicleType = vehicle.VehicleType,
-                    ManufacturingYear = vehicle.ManufacturingYear,
-                    ModelNumber = vehicle.ModelNumber
-                })
+                .Select(v => MapToResponseDto(v))
                 .ToListAsync();
         }
 
-        public async Task<VehicleResponseDto?> UpdateVehicle(int id, VehicleUpdateDTO vehicleDto)
+        public async Task<VehicleResponseDto?> UpdateVehicle(int id, VehicleUpdateDTO vehicleDto, int userId)
         {
             var vehicle = await _context.Vehicles.FindAsync(id);
 
-            if (vehicle == null)
+            if (vehicle == null || vehicle.UserID != userId)
                 return null;
 
-            if (vehicleDto.VehicleNumber != null)
-                vehicle.VehicleNumber = vehicleDto.VehicleNumber;
-
-            if (vehicleDto.VehicleType != null)
-                vehicle.VehicleType = vehicleDto.VehicleType;
-
-            if (vehicleDto.ChassisNumber != null)
-                vehicle.ChassisNumber = vehicleDto.ChassisNumber;
-
-            if (vehicleDto.EngineNumber != null)
-                vehicle.EngineNumber = vehicleDto.EngineNumber;
+            vehicle.VehicleNumber = vehicleDto.VehicleNumber ?? vehicle.VehicleNumber;
+            vehicle.VehicleType = vehicleDto.VehicleType ?? vehicle.VehicleType;
+            vehicle.ChassisNumber = vehicleDto.ChassisNumber ?? vehicle.ChassisNumber;
+            vehicle.EngineNumber = vehicleDto.EngineNumber ?? vehicle.EngineNumber;
+            vehicle.MakeOfVehicle = vehicleDto.MakeOfVehicle ?? vehicle.MakeOfVehicle;
+            vehicle.ModelNumber = vehicleDto.ModelNumber ?? vehicle.ModelNumber;
+            vehicle.BodyType = vehicleDto.BodyType ?? vehicle.BodyType;
+            vehicle.OrganisationName = vehicleDto.OrganisationName ?? vehicle.OrganisationName;
+            vehicle.DeviceID = vehicleDto.DeviceID ?? vehicle.DeviceID;
 
             if (vehicleDto.ManufacturingYear.HasValue)
                 vehicle.ManufacturingYear = vehicleDto.ManufacturingYear.Value;
@@ -127,37 +97,15 @@ namespace Backend.Services
             if (vehicleDto.LoadCarryingCapacity.HasValue)
                 vehicle.LoadCarryingCapacity = vehicleDto.LoadCarryingCapacity.Value;
 
-            if (vehicleDto.MakeOfVehicle != null)
-                vehicle.MakeOfVehicle = vehicleDto.MakeOfVehicle;
-
-            if (vehicleDto.ModelNumber != null)
-                vehicle.ModelNumber = vehicleDto.ModelNumber;
-
-            if (vehicleDto.BodyType != null)
-                vehicle.BodyType = vehicleDto.BodyType;
-
-            if (vehicleDto.OrganisationName != null)
-                vehicle.OrganisationName = vehicleDto.OrganisationName;
-
-            if (vehicleDto.DeviceID != null)
-                vehicle.DeviceID = vehicleDto.DeviceID;
-
             await _context.SaveChangesAsync();
 
-            return new VehicleResponseDto
-            {
-                VehicleID = vehicle.VehicleID,
-                UserID = vehicle.UserID,
-                VehicleNumber = vehicle.VehicleNumber,
-                VehicleType = vehicle.VehicleType,
-                ManufacturingYear = vehicle.ManufacturingYear,
-                ModelNumber = vehicle.ModelNumber
-            };
+            return MapToResponseDto(vehicle);
         }
 
-        public async Task<PagedResult<VehicleResponseDto>> SearchVehicles(string? searchTerm, int pageNumber, int pageSize)
+
+        public async Task<PagedResult<VehicleResponseDto>> SearchVehicles(int userId, string? searchTerm, int pageNumber, int pageSize)
         {
-            var query = _context.Vehicles.AsQueryable();
+            var query = _context.Vehicles.Where(v => v.UserID == userId).AsQueryable();
 
             // Wild search
             if (!string.IsNullOrEmpty(searchTerm))
@@ -193,5 +141,26 @@ namespace Backend.Services
                 Data = vehicles
             };
         }
+
+        private VehicleResponseDto MapToResponseDto(Vehicle v)
+        {
+            return new VehicleResponseDto
+            {
+                VehicleID = v.VehicleID,
+                UserID = v.UserID,
+                VehicleNumber = v.VehicleNumber,
+                VehicleType = v.VehicleType,
+                ManufacturingYear = v.ManufacturingYear,
+                ModelNumber = v.ModelNumber,
+                ChassisNumber = v.ChassisNumber,
+                EngineNumber = v.EngineNumber,
+                LoadCarryingCapacity = v.LoadCarryingCapacity,
+                MakeOfVehicle = v.MakeOfVehicle,
+                BodyType = v.BodyType,
+                OrganisationName = v.OrganisationName,
+                DeviceID = v.DeviceID
+            };
+        }
+
     }
 }
